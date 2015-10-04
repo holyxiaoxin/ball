@@ -52,10 +52,14 @@
 
 	var _ball2 = _interopRequireDefault(_ball);
 
+	var _nav = __webpack_require__(67);
+
+	var _nav2 = _interopRequireDefault(_nav);
+
 	$(function () {
-	  $('.score').hide();
-	  $('.goal').hide();
-	  new _ball2['default']();
+	  $('.score, .goal, .game-nav').hide();
+	  _nav2['default'].init();
+	  _ball2['default'].init();
 	});
 
 /***/ },
@@ -87,89 +91,116 @@
 	var baseY = 0.3 * viewportHeight;
 	var gameStarted = false;
 
-	var ball = (function () {
-	  function ball() {
+	var Ball = (function () {
+	  function Ball() {
 	    var _this = this;
 
-	    _classCallCheck(this, ball);
+	    _classCallCheck(this, Ball);
 
-	    var ballActor = new _popmotion2['default'].Actor({
-	      element: '#ball',
-	      values: {
-	        x: 0,
-	        y: 0
-	      },
-	      onUpdate: function onUpdate(ball) {
-	        if (ball.y === baseY + 'px' && gameStarted) {
-	          _this.gameOver();
-	        }
-	      }
-	    });
-
-	    var showBall = new _popmotion2['default'].Tween({
-	      values: {
-	        y: baseY,
-	        opacity: 1
-	      },
-	      onComplete: this.gameStart
-	    });
-
-	    var ballPhysics = new _popmotion2['default'].Simulate({
-	      values: {
-	        x: {
-	          friction: 0.05,
-	          min: -50,
-	          max: 50,
-	          velocity: function velocity() {
-	            return _popmotion2['default'].calc.random(-1, 1) * 500;
-	          },
-	          bounce: .7
-	        },
-	        y: {
-	          max: baseY,
-	          min: -baseY,
-	          acceleration: 2000,
-	          velocity: -viewportHeight * 1.5,
-	          bounce: .7
-	        }
-	      }
-	    });
+	    var ballActor = this.ballActor();
+	    var showBall = this.showBall();
+	    var ballPhysics = this.ballPhysics();
 
 	    ballActor.start(showBall.extend({
 	      duration: 500,
 	      ease: 'easeOut'
 	    })).then(function () {
 	      $('#ball').on('mousedown touchstart', ballActor.element, function (event) {
-	        var $instructions = $('.instructions');
-	        var $score = $('.score');
-	        var $scorePoints = $score.find('span');
-	        var $goal = $('.goal');
-	        var $goalPoints = $goal.find('span');
-
-	        if ($instructions.is(":visible")) {
-	          $instructions.hide();
-	        }
-	        if ($score.is(":hidden")) {
-	          $score.show();
-	        }
-	        if ($goal.is(":hidden")) {
-	          $goal.show();
-	        }
-	        var newPoints = parseFloat($scorePoints.html()) + 0.5;
-	        if (newPoints >= $goalPoints.html()) {
-	          _this.goalReached();
-	        }
-	        $scorePoints.html(newPoints);
+	        _this.updateTopView();
+	        _this.updatePoints();
 	        ballActor.start(ballPhysics);
+	        _this.gameStart();
 	      });
 	    });
 	  }
 
-	  _createClass(ball, [{
+	  _createClass(Ball, [{
+	    key: 'ballActor',
+	    value: function ballActor() {
+	      var _this2 = this;
+
+	      return new _popmotion2['default'].Actor({
+	        element: '#ball',
+	        values: {
+	          x: 0,
+	          y: 0
+	        },
+	        onUpdate: function onUpdate(ball) {
+	          if (ball.y === baseY + 'px' && gameStarted) {
+	            _this2.gameOver();
+	            gameStarted = false;
+	          }
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'showBall',
+	    value: function showBall() {
+	      return new _popmotion2['default'].Tween({
+	        values: {
+	          y: baseY,
+	          opacity: 1
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'ballPhysics',
+	    value: function ballPhysics() {
+	      return new _popmotion2['default'].Simulate({
+	        values: {
+	          x: {
+	            friction: 0.05,
+	            min: -50,
+	            max: 50,
+	            velocity: function velocity() {
+	              return _popmotion2['default'].calc.random(-1, 1) * 500;
+	            },
+	            bounce: .7
+	          },
+	          y: {
+	            max: baseY,
+	            min: -baseY,
+	            acceleration: 2000,
+	            velocity: -viewportHeight * 1.5,
+	            bounce: .7
+	          }
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'updateTopView',
+	    value: function updateTopView() {
+	      var $instructions = $('.instructions');
+	      var $score = $('.score');
+	      var $goal = $('.goal');
+
+	      if ($instructions.is(":visible")) {
+	        $instructions.hide();
+	      }
+	      if ($score.is(":hidden")) {
+	        $score.show();
+	      }
+	      if ($goal.is(":hidden")) {
+	        $goal.show();
+	      }
+	    }
+	  }, {
+	    key: 'updatePoints',
+	    value: function updatePoints() {
+	      var $scorePoints = $('.score span');
+	      var $goalPoints = $('.goal span');
+	      var newPoints = parseFloat($scorePoints.html()) + 1;
+	      if (newPoints >= $goalPoints.html()) {
+	        this.goalReached();
+	      }
+	      $scorePoints.html(newPoints);
+	    }
+	  }, {
 	    key: 'gameOver',
 	    value: function gameOver() {
 	      var $scorePoints = $('.score span');
 	      $scorePoints.html('0');
+	      $.growl.error({ title: "Game Over", message: "" });
 	    }
 	  }, {
 	    key: 'gameStart',
@@ -195,13 +226,18 @@
 
 	      $goalPoints.html(newGoal);
 	      blink();
+	      $.growl.notice({ title: "New trophy unlocked", message: "" });
 	    }
 	  }]);
 
-	  return ball;
+	  return Ball;
 	})();
 
-	exports['default'] = ball;
+	exports['default'] = {
+	  init: function init() {
+	    new Ball();
+	  }
+	};
 	module.exports = exports['default'];
 
 /***/ },
@@ -5535,6 +5571,50 @@
 
 	}).call(this);
 
+
+/***/ },
+/* 67 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	var Nav = (function () {
+	  function Nav() {
+	    _classCallCheck(this, Nav);
+
+	    this.initTrophiesNav();
+	    this.initGameNav();
+	  }
+
+	  _createClass(Nav, [{
+	    key: 'initTrophiesNav',
+	    value: function initTrophiesNav() {
+	      $('.trophies-nav').click(function () {
+	        console.log('click');
+	      });
+	    }
+	  }, {
+	    key: 'initGameNav',
+	    value: function initGameNav() {}
+	  }]);
+
+	  return Nav;
+	})();
+
+	exports['default'] = {
+	  init: function init() {
+	    new Nav();
+	  }
+	};
+	module.exports = exports['default'];
 
 /***/ }
 /******/ ]);

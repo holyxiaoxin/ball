@@ -1,23 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Ball</title>
-  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
-  <%= csrf_meta_tags %>
-</head>
-<body>
 
-  <div class="game">
-    <div class="instructions">Touch ball to begin.</div>
-    <div class="score">
-      Points: <span> 0 </span>
-    </div>
-    <div class="goal">
-      Goal: <span> 1 </span>
-    </div>
-    <div id="ball"></div>
+<div class="game">
+  <div class="trophies-nav">Trophies</div>
+  <div class="game-nav">Game</div>
+  <div class="instructions">Touch ball to begin.</div>
+  <div class="score">
+    Points: <span> 0 </span>
   </div>
-
-</body>
-</html>
+  <div class="goal">
+    Goal: <span> 1 </span>
+  </div>
+  <div id="ball"></div>
+</div>

@@ -1,7 +1,8 @@
 import Ball from './ball'
+import Nav from './nav'
 
 $(function(){
-  $('.score').hide();
-  $('.goal').hide();
-  new Ball();
+  $('.score, .goal, .game-nav').hide();
+  Nav.init();
+  Ball.init();
 })

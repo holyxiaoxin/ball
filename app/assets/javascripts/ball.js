@@ -6,9 +6,29 @@ const viewportHeight = $(window).height();
 const baseY = 0.3 * viewportHeight;
 let gameStarted = false;
 
-class ball {
+class Ball {
   constructor() {
-    var ballActor = new ui.Actor({
+    let ballActor = this.ballActor();
+    let showBall = this.showBall();
+    let ballPhysics = this.ballPhysics();
+
+    ballActor
+    .start(showBall.extend({
+      duration: 500,
+      ease: 'easeOut'
+    }))
+    .then(() => {
+      $('#ball').on('mousedown touchstart', ballActor.element, (event) => {
+        this.updateTopView();
+        this.updatePoints();
+        ballActor.start(ballPhysics);
+        this.gameStart();
+      });
+    });
+  }
+
+  ballActor() {
+    return new ui.Actor({
       element: '#ball',
       values: {
         x: 0,
@@ -17,19 +37,23 @@ class ball {
       onUpdate: (ball) => {
         if(ball.y === `${baseY}px` && gameStarted){
           this.gameOver();
+          gameStarted = false;
         }
       }
     });
+  }
 
-    var showBall = new ui.Tween({
+  showBall() {
+    return new ui.Tween({
       values: {
         y: baseY,
         opacity: 1
-      },
-      onComplete: this.gameStart
+      }
     });
+  }
 
-    var ballPhysics = new ui.Simulate({
+  ballPhysics() {
+    return new ui.Simulate({
       values: {
         x: {
           friction: 0.05,
@@ -49,43 +73,38 @@ class ball {
         }
       }
     })
+  }
 
+  updateTopView() {
+    let $instructions = $('.instructions');
+    let $score = $('.score');
+    let $goal = $('.goal');
 
-    ballActor
-    .start(showBall.extend({
-      duration: 500,
-      ease: 'easeOut'
-    }))
-    .then(() => {
-      $('#ball').on('mousedown touchstart', ballActor.element, (event) => {
-        let $instructions = $('.instructions');
-        let $score = $('.score');
-        let $scorePoints = $score.find('span');
-        let $goal = $('.goal');
-        let $goalPoints = $goal.find('span');
+    if ($instructions.is(":visible")) {
+      $instructions.hide();
+    }
+    if ($score.is(":hidden")) {
+      $score.show();
+    }
+    if ($goal.is(":hidden")) {
+      $goal.show();
+    }
+  }
 
-        if ($instructions.is(":visible")) {
-          $instructions.hide();
-        }
-        if ($score.is(":hidden")) {
-          $score.show();
-        }
-        if ($goal.is(":hidden")) {
-          $goal.show();
-        }
-        let newPoints = parseFloat($scorePoints.html())+0.5;
-        if (newPoints >= $goalPoints.html()) {
-          this.goalReached();
-        }
-        $scorePoints.html(newPoints);
-        ballActor.start(ballPhysics);
-      });
-    });
+  updatePoints() {
+    let $scorePoints = $('.score span');
+    let $goalPoints = $('.goal span');
+    let newPoints = parseFloat($scorePoints.html())+1;
+    if (newPoints >= $goalPoints.html()) {
+      this.goalReached();
+    }
+    $scorePoints.html(newPoints);
   }
 
   gameOver() {
     let $scorePoints = $('.score span');
     $scorePoints.html('0');
+    $.growl.error({title: "Game Over", message: ""});
   }
 
   gameStart() {
@@ -107,8 +126,13 @@ class ball {
 
     $goalPoints.html(newGoal);
     blink();
+    $.growl.notice({title: "New trophy unlocked", message: ""});
   }
 
 }
 
-export default ball
+export default {
+  init: function() {
+    new Ball();
+  }
+};
