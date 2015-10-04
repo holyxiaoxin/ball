@@ -18,10 +18,15 @@
   <!-- This is the trophies container -->
   <!-- This is hidden on page load  -->
   <div class="trophies-container">
+    <div class="all-trophies-unlocked"> All trophies unlocked </div>
+    <div class="empty-trophies">
+      Looks like you do not have any trophies now. <br>
+      Try hitting your goal first.
+    </div>
     <% @trophies.each do |t| %>
     <div class="card">
       <div class="front">
-        <a><img src=<%=t.src%> alt="Trophy"></a>
+        <a><img src=<%=t.src%> alt=<%=t.alt%>></a>
       </div>
       <div class="back">
         <%=t.description%>

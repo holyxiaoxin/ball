@@ -23,7 +23,11 @@ body {
   height: 1000px;
 }
 
-.instructions, .goal, .score {
+.trophies-container {
+  width: 100%;
+}
+
+.instructions, .goal, .score, .all-trophies-unlocked, .empty-trophies {
   margin-top: 20px;
   color: white;
   text-align: center;

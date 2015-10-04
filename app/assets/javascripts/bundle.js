@@ -61,7 +61,7 @@
 	var _nav2 = _interopRequireDefault(_nav);
 
 	$(function () {
-	  $('.score, .goal, .game-nav, .trophies-container').hide();
+	  $('.score, .goal, .game-nav, .trophies-container, .card, .all-trophies-unlocked').hide();
 	  _nav2['default'].init();
 	  _ball2['default'].init();
 	  _trophies2['default'].init();
@@ -94,7 +94,10 @@
 	var viewportWidth = $(window).width();
 	var viewportHeight = $(window).height();
 	var baseY = 0.3 * viewportHeight;
+	var growlLocation = 'tl';
+	var defaultGrowSize = 'small';
 	var gameStarted = false;
+	var gameCompleted = false;
 
 	var Ball = (function () {
 	  function Ball() {
@@ -205,7 +208,9 @@
 	    value: function gameOver() {
 	      var $scorePoints = $('.score span');
 	      $scorePoints.html('0');
-	      $.growl.error({ title: "Game Over", message: "" });
+	      if (!gameCompleted) {
+	        $.growl.error({ title: "Game Over", message: "", location: growlLocation, size: defaultGrowSize });
+	      }
 	    }
 	  }, {
 	    key: 'gameStart',
@@ -216,7 +221,7 @@
 	    key: 'goalReached',
 	    value: function goalReached() {
 	      var $goalPoints = $('.goal span');
-	      var newGoal = parseFloat($goalPoints.html()) + 1;
+	      var newGoal = parseInt($goalPoints.html()) + 1;
 	      var blinkOnce = function blinkOnce(color, delay) {
 	        setTimeout(function () {
 	          $goalPoints.css('color', color);
@@ -228,10 +233,31 @@
 	        blinkOnce('red', 100);
 	        blinkOnce('white', 150);
 	      };
+	      var unlockTrophy = function unlockTrophy() {
+	        $('.empty-trophies').hide();
+	        var $trophiesContainer = $('.trophies-container');
+	        var card = $trophiesContainer.find('.card:nth-child(' + (newGoal + 1) + ')');
+	        var trophiesCount = $trophiesContainer.find('.card').length;
+	        if (parseInt(newGoal - 1) <= trophiesCount) {
+	          card.show();
+	        } else {
+	          gameComplete();
+	        }
+	      };
+	      var gameComplete = function gameComplete() {
+	        $.growl.notice({ title: "You have unlocked all trophies", message: "", location: growlLocation, size: defaultGrowSize });
+	        $('#game-wrapper').removeClass('game-body').addClass('trophies-body');
+	        $('.trophies-nav').fadeOut("slow");
+	        $('.trophies-container').fadeIn("slow");
+	        $('.all-trophies-unlocked').fadeIn("slow");
+	        $('.game-container').fadeOut("slow");
+	        gameCompleted = true;
+	      };
 
+	      $.growl.notice({ title: "New trophy unlocked", message: "", location: growlLocation, size: defaultGrowSize });
 	      $goalPoints.html(newGoal);
 	      blink();
-	      $.growl.notice({ title: "New trophy unlocked", message: "" });
+	      unlockTrophy();
 	    }
 	  }]);
 

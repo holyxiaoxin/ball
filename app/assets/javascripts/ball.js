@@ -4,7 +4,10 @@ import growl from '../../../bower_components/growl/javascripts/jquery.growl';
 const viewportWidth = $(window).width();
 const viewportHeight = $(window).height();
 const baseY = 0.3 * viewportHeight;
+const growlLocation = 'tl';
+const defaultGrowSize = 'small';
 let gameStarted = false;
+let gameCompleted = false;
 
 class Ball {
   constructor() {
@@ -104,7 +107,9 @@ class Ball {
   gameOver() {
     let $scorePoints = $('.score span');
     $scorePoints.html('0');
-    $.growl.error({title: "Game Over", message: ""});
+    if (!gameCompleted) {
+      $.growl.error({title: "Game Over", message: "", location: growlLocation, size: defaultGrowSize});
+    }
   }
 
   gameStart() {
@@ -113,7 +118,7 @@ class Ball {
 
   goalReached() {
     let $goalPoints = $('.goal span');
-    let newGoal = parseFloat($goalPoints.html())+1;
+    let newGoal = parseInt($goalPoints.html())+1;
     let blinkOnce = (color, delay) => {
       setTimeout(()=>{$goalPoints.css('color', color)}, delay);
     }
@@ -123,10 +128,31 @@ class Ball {
       blinkOnce('red', 100);
       blinkOnce('white', 150);
     }
+    let unlockTrophy = () => {
+      $('.empty-trophies').hide();
+      let $trophiesContainer = $('.trophies-container');
+      let card = $trophiesContainer.find(`.card:nth-child(${newGoal+1})`);
+      let trophiesCount = $trophiesContainer.find('.card').length;
+      if(parseInt(newGoal-1) <= trophiesCount) {
+        card.show();
+      } else {
+        gameComplete();
+      }
+    }
+    let gameComplete = () => {
+      $.growl.notice({title: "You have unlocked all trophies", message: "", location: growlLocation, size: defaultGrowSize});
+      $('#game-wrapper').removeClass('game-body').addClass('trophies-body');
+      $('.trophies-nav').fadeOut("slow");
+      $('.trophies-container').fadeIn("slow");
+      $('.all-trophies-unlocked').fadeIn("slow");
+      $('.game-container').fadeOut("slow");
+      gameCompleted = true;
+    }
 
+    $.growl.notice({title: "New trophy unlocked", message: "", location: growlLocation, size: defaultGrowSize});
     $goalPoints.html(newGoal);
     blink();
-    $.growl.notice({title: "New trophy unlocked", message: ""});
+    unlockTrophy();
   }
 
 }
