@@ -1,18 +1,26 @@
 // Place all the styles related to the balls controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+$main-background-color:  #2a2a2a;
 
 body {
   font-family: 'Open Sans', sans-serif;
+  background: $main-background-color;
+  margin: 0px;
 }
 
-.game {
-    background: #2a2a2a;
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
+.game-body {
+  background: $main-background-color;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.trophies-body {
+  background: $main-background-color;
+  height: 1000px;
 }
 
 .instructions, .goal, .score {
@@ -32,6 +40,7 @@ body {
   text-align: right;
   font-size: 20px;
   font-weight: 300;
+  z-index: 1;
   &:hover {
     color: red;
     font-size: 150%;
@@ -39,15 +48,37 @@ body {
   }
 }
 
+.trophies-container {
+  position: absolute;
+  top: 0;
+}
+
+.card {
+  width: 300px;
+  height: 300px;
+  margin: 50px;
+  display: inline-block;
+}
+
+.back {
+  padding: 10px;
+  background-color: white;
+}
+
+img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
 #ball {
-    opacity: 0;
-    background: #ff2420;
-    border-radius: 50%;
-    position: absolute;
-    width: 75px;
-    height: 75px;
-    left: 50%;
-    top: 50%;
-    margin: -25px 0 0 -25px;
-    transform-origin: 50%;
+  opacity: 0;
+  background: #ff2420;
+  border-radius: 50%;
+  position: absolute;
+  width: 75px;
+  height: 75px;
+  left: 50%;
+  top: 50%;
+  margin: -25px 0 0 -25px;
+  transform-origin: 50%;
 }

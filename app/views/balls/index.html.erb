@@ -1,13 +1,32 @@
 
-<div class="game">
+<div id="game-wrapper" class="game-body">
   <div class="trophies-nav">Trophies</div>
   <div class="game-nav">Game</div>
-  <div class="instructions">Touch ball to begin.</div>
-  <div class="score">
-    Points: <span> 0 </span>
+
+  <!-- This is the game container -->
+  <div class="game-container">
+    <div class="instructions">Touch ball to begin.</div>
+    <div class="score">
+      Points: <span> 0 </span>
+    </div>
+    <div class="goal">
+      Goal: <span> 1 </span>
+    </div>
+    <div id="ball"></div>
   </div>
-  <div class="goal">
-    Goal: <span> 1 </span>
+
+  <!-- This is the trophies container -->
+  <!-- This is hidden on page load  -->
+  <div class="trophies-container">
+    <% @trophies.each do |t| %>
+    <div class="card">
+      <div class="front">
+        <a><img src=<%=t.src%> alt="Trophy"></a>
+      </div>
+      <div class="back">
+        <%=t.description%>
+      </div>
+    </div>
+    <% end %>
   </div>
-  <div id="ball"></div>
 </div>

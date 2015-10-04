@@ -52,14 +52,19 @@
 
 	var _ball2 = _interopRequireDefault(_ball);
 
-	var _nav = __webpack_require__(67);
+	var _trophies = __webpack_require__(67);
+
+	var _trophies2 = _interopRequireDefault(_trophies);
+
+	var _nav = __webpack_require__(68);
 
 	var _nav2 = _interopRequireDefault(_nav);
 
 	$(function () {
-	  $('.score, .goal, .game-nav').hide();
+	  $('.score, .goal, .game-nav, .trophies-container').hide();
 	  _nav2['default'].init();
 	  _ball2['default'].init();
+	  _trophies2['default'].init();
 	});
 
 /***/ },
@@ -5582,6 +5587,34 @@
 	  value: true
 	});
 
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	var Trophies = function Trophies() {
+	  _classCallCheck(this, Trophies);
+
+	  $(".card").flip({
+	    axis: 'y',
+	    trigger: 'hover'
+	  });
+	};
+
+	exports['default'] = {
+	  init: function init() {
+	    new Trophies();
+	  }
+	};
+	module.exports = exports['default'];
+
+/***/ },
+/* 68 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
@@ -5598,12 +5631,24 @@
 	    key: 'initTrophiesNav',
 	    value: function initTrophiesNav() {
 	      $('.trophies-nav').click(function () {
-	        console.log('click');
+	        $('#game-wrapper').removeClass('game-body').addClass('trophies-body');
+	        $('.game-nav').fadeIn("slow");
+	        $(this).fadeOut("slow");
+	        $('.trophies-container').fadeIn("slow");
+	        $('.game-container').fadeOut("slow");
 	      });
 	    }
 	  }, {
 	    key: 'initGameNav',
-	    value: function initGameNav() {}
+	    value: function initGameNav() {
+	      $('.game-nav').click(function () {
+	        $('#game-wrapper').removeClass('trophies-body').addClass('game-body');
+	        $('.trophies-nav').fadeIn("slow");
+	        $(this).fadeOut("slow");
+	        $('.game-container').fadeIn("slow");
+	        $('.trophies-container').fadeOut("slow");
+	      });
+	    }
 	  }]);
 
 	  return Nav;
