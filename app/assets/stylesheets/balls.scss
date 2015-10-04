@@ -2,6 +2,10 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+body {
+  font-family: 'Open Sans', sans-serif;
+}
+
 .game {
     background: #2a2a2a;
     position: absolute;
@@ -11,8 +15,14 @@
     left: 0;
 }
 
-.instructions {
+.instructions, .goal, .score {
   color: white;
+  text-align: center;
+  font-size: 34px;
+  font-weight: 300;
+  line-height: 40px;
+  margin-top: 20px;
+
 }
 
 #ball {
@@ -20,8 +30,8 @@
     background: #ff2420;
     border-radius: 50%;
     position: absolute;
-    width: 50px;
-    height: 50px;
+    width: 75px;
+    height: 75px;
     left: 50%;
     top: 50%;
     margin: -25px 0 0 -25px;

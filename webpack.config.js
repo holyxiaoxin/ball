@@ -10,8 +10,7 @@ module.exports = {
     publicPath: '/assets'
   },
   resolve: {
-      extensions: ['', '.js'],
-      modulesDirectories: [ 'node_modules', 'bower_components' ],
+      root: [path.join(__dirname, "bower_components")]
   },
   plugins: [
     new webpack.ResolverPlugin([
