@@ -133,9 +133,8 @@ class Ball {
       let $trophiesContainer = $('.trophies-container');
       let card = $trophiesContainer.find(`.card:nth-child(${newGoal+1})`);
       let trophiesCount = $trophiesContainer.find('.card').length;
-      if(parseInt(newGoal-1) < trophiesCount) {
-        card.show();
-      } else {
+      card.show();
+      if(parseInt(newGoal-1) >= trophiesCount) {
         gameComplete();
       }
     }
