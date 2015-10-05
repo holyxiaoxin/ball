@@ -238,7 +238,9 @@
 	        var $trophiesContainer = $('.trophies-container');
 	        var card = $trophiesContainer.find('.card:nth-child(' + (newGoal + 1) + ')');
 	        var trophiesCount = $trophiesContainer.find('.card').length;
-	        if (parseInt(newGoal - 1) <= trophiesCount) {
+	        if (parseInt(newGoal - 1) < trophiesCount) {
+	          console.log('goal' + parseInt(newGoal - 1));
+	          console.log('count' + trophiesCount);
 	          card.show();
 	        } else {
 	          gameComplete();
