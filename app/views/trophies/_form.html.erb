@@ -1,0 +1,29 @@
+<%= form_for(@trophy) do |f| %>
+  <% if @trophy.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@trophy.errors.count, "error") %> prohibited this trophy from being saved:</h2>
+
+      <ul>
+      <% @trophy.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :src %><br>
+    <%= f.text_area :src %>
+  </div>
+  <div class="field">
+    <%= f.label :alt %><br>
+    <%= f.text_area :alt %>
+  </div>
+  <div class="field">
+    <%= f.label :description %><br>
+    <%= f.text_area :description %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
