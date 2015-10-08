@@ -1,5 +1,6 @@
 import ui from 'popmotion';
 import growl from '../../../bower_components/growl/javascripts/jquery.growl';
+import Trophies from './trophies';
 
 const viewportWidth = $(window).width();
 const viewportHeight = $(window).height();
@@ -9,11 +10,12 @@ const defaultGrowSize = 'small';
 let gameStarted = false;
 let gameCompleted = false;
 
-class Ball {
-  constructor() {
-    let ballActor = this.ballActor();
-    let showBall = this.showBall();
-    let ballPhysics = this.ballPhysics();
+export default class Ball {
+
+  static init() {
+    const ballActor = this.ballActor();
+    const showBall = this.showBall();
+    const ballPhysics = this.ballPhysics();
 
     ballActor
     .start(showBall.extend({
@@ -30,7 +32,7 @@ class Ball {
     });
   }
 
-  ballActor() {
+  static ballActor() {
     return new ui.Actor({
       element: '#ball',
       values: {
@@ -46,7 +48,7 @@ class Ball {
     });
   }
 
-  showBall() {
+  static showBall() {
     return new ui.Tween({
       values: {
         y: baseY,
@@ -55,7 +57,7 @@ class Ball {
     });
   }
 
-  ballPhysics() {
+  static ballPhysics() {
     return new ui.Simulate({
       values: {
         x: {
@@ -78,10 +80,10 @@ class Ball {
     })
   }
 
-  updateTopView() {
-    let $instructions = $('.instructions');
-    let $score = $('.score');
-    let $goal = $('.goal');
+  static updateTopView() {
+    const $instructions = $('.instructions');
+    const $score = $('.score');
+    const $goal = $('.goal');
 
     if ($instructions.is(":visible")) {
       $instructions.hide();
@@ -94,51 +96,49 @@ class Ball {
     }
   }
 
-  updatePoints() {
-    let $scorePoints = $('.score span');
-    let $goalPoints = $('.goal span');
-    let newPoints = parseFloat($scorePoints.html())+1;
+  static updatePoints() {
+    const $scorePoints = $('.score span');
+    const $goalPoints = $('.goal span');
+    const newPoints = parseFloat($scorePoints.html())+1;
+
     if (newPoints >= $goalPoints.html()) {
       this.goalReached();
     }
     $scorePoints.html(newPoints);
   }
 
-  gameOver() {
-    let $scorePoints = $('.score span');
+  static gameOver() {
+    const $scorePoints = $('.score span');
     $scorePoints.html('0');
     if (!gameCompleted) {
       $.growl.error({title: "Game Over", message: "", location: growlLocation, size: defaultGrowSize});
     }
   }
 
-  gameStart() {
+  static gameStart() {
     gameStarted = true;
   }
 
-  goalReached() {
-    let $goalPoints = $('.goal span');
-    let newGoal = parseInt($goalPoints.html())+1;
-    let blinkOnce = (color, delay) => {
+  static goalReached() {
+    const $goalPoints = $('.goal span');
+    const blinkOnce = (color, delay) => {
       setTimeout(()=>{$goalPoints.css('color', color)}, delay);
     }
-    let blink = () => {
+    const blink = () => {
       blinkOnce('red', 0);
       blinkOnce('white', 50);
       blinkOnce('red', 100);
       blinkOnce('white', 150);
     }
-    let unlockTrophy = () => {
+    const unlockTrophy = () => {
       $('.empty-trophies').hide();
-      let $trophiesContainer = $('.trophies-container');
-      let card = $trophiesContainer.find(`.card:nth-child(${newGoal+1})`);
-      let trophiesCount = $trophiesContainer.find('.card').length;
+      const card = Trophies.getNextTrophy$();
       card.show();
-      if(parseInt(newGoal-1) >= trophiesCount) {
+      if(Trophies.currentGoal() > Trophies.count()) {
         gameComplete();
       }
     }
-    let gameComplete = () => {
+    const gameComplete = () => {
       $.growl.notice({title: "You have unlocked all trophies", message: "", location: growlLocation, size: defaultGrowSize});
       $('#game-wrapper').removeClass('game-body').addClass('trophies-body');
       $('.trophies-nav').fadeOut("slow");
@@ -149,15 +149,9 @@ class Ball {
     }
 
     $.growl.notice({title: "New trophy unlocked", message: "", location: growlLocation, size: defaultGrowSize});
-    $goalPoints.html(newGoal);
+    $goalPoints.html(Trophies.currentGoal()+1);
     blink();
     unlockTrophy();
   }
 
 }
-
-export default {
-  init: function() {
-    new Ball();
-  }
-};

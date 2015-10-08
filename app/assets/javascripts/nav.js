@@ -1,10 +1,11 @@
-class Nav {
-  constructor () {
+export default class Nav {
+
+  static init() {
     this.initTrophiesNav();
     this.initGameNav();
   }
 
-  initTrophiesNav() {
+  static initTrophiesNav() {
     $('.trophies-nav').click(function () {
       $('#game-wrapper').removeClass('game-body').addClass('trophies-body');
       $('.game-nav').fadeIn("slow");
@@ -14,7 +15,7 @@ class Nav {
     });
   }
 
-  initGameNav() {
+  static initGameNav() {
     $('.game-nav').click(function () {
       $('#game-wrapper').removeClass('trophies-body').addClass('game-body');
       $('.trophies-nav').fadeIn("slow");
@@ -23,10 +24,5 @@ class Nav {
       $('.trophies-container').fadeOut("slow");
     });
   }
+  
 }
-
-export default {
-  init: function() {
-    new Nav();
-  }
-};

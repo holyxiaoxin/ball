@@ -48,27 +48,87 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _ball = __webpack_require__(1);
-
-	var _ball2 = _interopRequireDefault(_ball);
-
-	var _trophies = __webpack_require__(67);
-
-	var _trophies2 = _interopRequireDefault(_trophies);
-
-	var _nav = __webpack_require__(68);
+	var _nav = __webpack_require__(1);
 
 	var _nav2 = _interopRequireDefault(_nav);
 
+	var _ball = __webpack_require__(2);
+
+	var _ball2 = _interopRequireDefault(_ball);
+
+	var _trophies = __webpack_require__(68);
+
+	var _trophies2 = _interopRequireDefault(_trophies);
+
 	$(function () {
-	  $('.score, .goal, .game-nav, .trophies-container, .card, .all-trophies-unlocked').hide();
+
+	  initHide();
 	  _nav2['default'].init();
 	  _ball2['default'].init();
 	  _trophies2['default'].init();
+
+	  function initHide() {
+	    $('.score, .goal, .game-nav, .trophies-container, .card, .all-trophies-unlocked').hide();
+	  }
 	});
 
 /***/ },
 /* 1 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	var Nav = (function () {
+	  function Nav() {
+	    _classCallCheck(this, Nav);
+	  }
+
+	  _createClass(Nav, null, [{
+	    key: 'init',
+	    value: function init() {
+	      this.initTrophiesNav();
+	      this.initGameNav();
+	    }
+	  }, {
+	    key: 'initTrophiesNav',
+	    value: function initTrophiesNav() {
+	      $('.trophies-nav').click(function () {
+	        $('#game-wrapper').removeClass('game-body').addClass('trophies-body');
+	        $('.game-nav').fadeIn("slow");
+	        $(this).fadeOut("slow");
+	        $('.trophies-container').fadeIn("slow");
+	        $('.game-container').fadeOut("slow");
+	      });
+	    }
+	  }, {
+	    key: 'initGameNav',
+	    value: function initGameNav() {
+	      $('.game-nav').click(function () {
+	        $('#game-wrapper').removeClass('trophies-body').addClass('game-body');
+	        $('.trophies-nav').fadeIn("slow");
+	        $(this).fadeOut("slow");
+	        $('.game-container').fadeIn("slow");
+	        $('.trophies-container').fadeOut("slow");
+	      });
+	    }
+	  }]);
+
+	  return Nav;
+	})();
+
+	exports['default'] = Nav;
+	module.exports = exports['default'];
+
+/***/ },
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -83,13 +143,17 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var _popmotion = __webpack_require__(2);
+	var _popmotion = __webpack_require__(3);
 
 	var _popmotion2 = _interopRequireDefault(_popmotion);
 
-	var _bower_componentsGrowlJavascriptsJqueryGrowl = __webpack_require__(66);
+	var _bower_componentsGrowlJavascriptsJqueryGrowl = __webpack_require__(67);
 
 	var _bower_componentsGrowlJavascriptsJqueryGrowl2 = _interopRequireDefault(_bower_componentsGrowlJavascriptsJqueryGrowl);
+
+	var _trophies = __webpack_require__(68);
+
+	var _trophies2 = _interopRequireDefault(_trophies);
 
 	var viewportWidth = $(window).width();
 	var viewportHeight = $(window).height();
@@ -101,28 +165,31 @@
 
 	var Ball = (function () {
 	  function Ball() {
-	    var _this = this;
-
 	    _classCallCheck(this, Ball);
-
-	    var ballActor = this.ballActor();
-	    var showBall = this.showBall();
-	    var ballPhysics = this.ballPhysics();
-
-	    ballActor.start(showBall.extend({
-	      duration: 500,
-	      ease: 'easeOut'
-	    })).then(function () {
-	      $('#ball').on('mousedown touchstart', ballActor.element, function (event) {
-	        _this.updateTopView();
-	        _this.updatePoints();
-	        ballActor.start(ballPhysics);
-	        _this.gameStart();
-	      });
-	    });
 	  }
 
-	  _createClass(Ball, [{
+	  _createClass(Ball, null, [{
+	    key: 'init',
+	    value: function init() {
+	      var _this = this;
+
+	      var ballActor = this.ballActor();
+	      var showBall = this.showBall();
+	      var ballPhysics = this.ballPhysics();
+
+	      ballActor.start(showBall.extend({
+	        duration: 500,
+	        ease: 'easeOut'
+	      })).then(function () {
+	        $('#ball').on('mousedown touchstart', ballActor.element, function (event) {
+	          _this.updateTopView();
+	          _this.updatePoints();
+	          ballActor.start(ballPhysics);
+	          _this.gameStart();
+	        });
+	      });
+	    }
+	  }, {
 	    key: 'ballActor',
 	    value: function ballActor() {
 	      var _this2 = this;
@@ -198,6 +265,7 @@
 	      var $scorePoints = $('.score span');
 	      var $goalPoints = $('.goal span');
 	      var newPoints = parseFloat($scorePoints.html()) + 1;
+
 	      if (newPoints >= $goalPoints.html()) {
 	        this.goalReached();
 	      }
@@ -221,7 +289,6 @@
 	    key: 'goalReached',
 	    value: function goalReached() {
 	      var $goalPoints = $('.goal span');
-	      var newGoal = parseInt($goalPoints.html()) + 1;
 	      var blinkOnce = function blinkOnce(color, delay) {
 	        setTimeout(function () {
 	          $goalPoints.css('color', color);
@@ -235,11 +302,9 @@
 	      };
 	      var unlockTrophy = function unlockTrophy() {
 	        $('.empty-trophies').hide();
-	        var $trophiesContainer = $('.trophies-container');
-	        var card = $trophiesContainer.find('.card:nth-child(' + (newGoal + 1) + ')');
-	        var trophiesCount = $trophiesContainer.find('.card').length;
+	        var card = _trophies2['default'].getNextTrophy$();
 	        card.show();
-	        if (parseInt(newGoal - 1) >= trophiesCount) {
+	        if (_trophies2['default'].currentGoal() > _trophies2['default'].count()) {
 	          gameComplete();
 	        }
 	      };
@@ -254,7 +319,7 @@
 	      };
 
 	      $.growl.notice({ title: "New trophy unlocked", message: "", location: growlLocation, size: defaultGrowSize });
-	      $goalPoints.html(newGoal);
+	      $goalPoints.html(_trophies2['default'].currentGoal() + 1);
 	      blink();
 	      unlockTrophy();
 	    }
@@ -263,49 +328,8 @@
 	  return Ball;
 	})();
 
-	exports['default'] = {
-	  init: function init() {
-	    new Ball();
-	  }
-	};
+	exports['default'] = Ball;
 	module.exports = exports['default'];
-
-/***/ },
-/* 2 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	var popmotion = __webpack_require__(3);
-
-	/*
-	    Add optional custom value type support
-	*/
-	popmotion.addValueType({
-	    alpha: __webpack_require__(47),
-	    angle: __webpack_require__(48),
-	    px: __webpack_require__(49),
-	    hsl: __webpack_require__(50),
-	    rgb: __webpack_require__(57),
-	    hex: __webpack_require__(58),
-	    color: __webpack_require__(59),
-	    positions: __webpack_require__(60),
-	    dimensions: __webpack_require__(62),
-	    scale: __webpack_require__(63),
-	    shadow: __webpack_require__(64),
-	    complex: __webpack_require__(65)
-	});
-
-	/*
-	    Predefined roles
-	*/
-
-	popmotion.attr = __webpack_require__(30);
-	popmotion.css = __webpack_require__(23);
-	popmotion.svg = __webpack_require__(29);
-	popmotion.drawPath = __webpack_require__(33);
-
-	module.exports = popmotion;
 
 /***/ },
 /* 3 */
@@ -313,26 +337,63 @@
 
 	"use strict";
 
-	var valueTypeManager = __webpack_require__(4),
-	    _select = __webpack_require__(6),
+	var popmotion = __webpack_require__(4);
+
+	/*
+	    Add optional custom value type support
+	*/
+	popmotion.addValueType({
+	    alpha: __webpack_require__(48),
+	    angle: __webpack_require__(49),
+	    px: __webpack_require__(50),
+	    hsl: __webpack_require__(51),
+	    rgb: __webpack_require__(58),
+	    hex: __webpack_require__(59),
+	    color: __webpack_require__(60),
+	    positions: __webpack_require__(61),
+	    dimensions: __webpack_require__(63),
+	    scale: __webpack_require__(64),
+	    shadow: __webpack_require__(65),
+	    complex: __webpack_require__(66)
+	});
+
+	/*
+	    Predefined roles
+	*/
+
+	popmotion.attr = __webpack_require__(31);
+	popmotion.css = __webpack_require__(24);
+	popmotion.svg = __webpack_require__(30);
+	popmotion.drawPath = __webpack_require__(34);
+
+	module.exports = popmotion;
+
+/***/ },
+/* 4 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var valueTypeManager = __webpack_require__(5),
+	    _select = __webpack_require__(7),
 	    Popmotion = {
 
-	    Actor: __webpack_require__(7),
+	    Actor: __webpack_require__(8),
 
-	    Input: __webpack_require__(35),
+	    Input: __webpack_require__(36),
 
-	    Iterator: __webpack_require__(37),
+	    Iterator: __webpack_require__(38),
 
-	    Process: __webpack_require__(8),
+	    Process: __webpack_require__(9),
 
-	    Easing: __webpack_require__(40),
+	    Easing: __webpack_require__(41),
 
-	    Role: __webpack_require__(22),
+	    Role: __webpack_require__(23),
 
-	    Action: __webpack_require__(17),
-	    Tween: __webpack_require__(38),
-	    Simulate: __webpack_require__(43),
-	    Track: __webpack_require__(45),
+	    Action: __webpack_require__(18),
+	    Tween: __webpack_require__(39),
+	    Simulate: __webpack_require__(44),
+	    Track: __webpack_require__(46),
 
 	    /*
 	        Create an Iterator of Actors with selected dom elements
@@ -358,18 +419,18 @@
 	        return this;
 	    },
 
-	    calc: __webpack_require__(16)
+	    calc: __webpack_require__(17)
 	};
 
 	module.exports = Popmotion;
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var ModManager = __webpack_require__(5),
+	var ModManager = __webpack_require__(6),
 	    valueTypeManager = new ModManager();
 
 	valueTypeManager.defaultProps = function (type, key) {
@@ -394,7 +455,7 @@
 	module.exports = valueTypeManager;
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -453,7 +514,7 @@
 	module.exports = ModManager;
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports) {
 
 	/*
@@ -486,7 +547,7 @@
 	};
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -495,21 +556,21 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var Process = __webpack_require__(8),
-	    Queue = __webpack_require__(14),
-	    utils = __webpack_require__(12),
-	    update = __webpack_require__(15),
-	    valueOps = __webpack_require__(20),
-	    select = __webpack_require__(6),
+	var Process = __webpack_require__(9),
+	    Queue = __webpack_require__(15),
+	    utils = __webpack_require__(13),
+	    update = __webpack_require__(16),
+	    valueOps = __webpack_require__(21),
+	    select = __webpack_require__(7),
 
 	/*
 	    Role imports
 	*/
-	defaultRole = __webpack_require__(21),
-	    cssRole = __webpack_require__(23),
-	    svgRole = __webpack_require__(29),
-	    drawPathRole = __webpack_require__(33),
-	    Action = __webpack_require__(17),
+	defaultRole = __webpack_require__(22),
+	    cssRole = __webpack_require__(24),
+	    svgRole = __webpack_require__(30),
+	    drawPathRole = __webpack_require__(34),
+	    Action = __webpack_require__(18),
 	    each = utils.each;
 
 	var Actor = (function () {
@@ -901,12 +962,12 @@
 	module.exports = Actor;
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var manager = __webpack_require__(9),
+	var manager = __webpack_require__(10),
 
 	/*
 	    Process constructor
@@ -1048,12 +1109,12 @@
 	module.exports = Process;
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var theLoop = __webpack_require__(10),
+	var theLoop = __webpack_require__(11),
 	    ProcessManager = function ProcessManager() {
 	    this.activeIds = [];
 	    this.activeProcesses = {};
@@ -1215,7 +1276,7 @@
 	module.exports = new ProcessManager();
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -1223,8 +1284,8 @@
 	*/
 	"use strict";
 
-	var Timer = __webpack_require__(11),
-	    tick = __webpack_require__(13),
+	var Timer = __webpack_require__(12),
+	    tick = __webpack_require__(14),
 	    Loop = function Loop() {
 	    this.timer = new Timer();
 	};
@@ -1290,12 +1351,12 @@
 	module.exports = new Loop();
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var utils = __webpack_require__(12),
+	var utils = __webpack_require__(13),
 	    maxElapsed = 33,
 	    Timer = function Timer() {
 	    this.elapsed = 16.7;
@@ -1324,7 +1385,7 @@
 	module.exports = Timer;
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports) {
 
 	/*
@@ -1586,7 +1647,7 @@
 	};
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1628,7 +1689,7 @@
 	module.exports = tick;
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1681,18 +1742,18 @@
 	module.exports = Queue;
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var valueTypeManager = __webpack_require__(4),
-	    calc = __webpack_require__(16),
-	    utils = __webpack_require__(12),
+	var valueTypeManager = __webpack_require__(5),
+	    calc = __webpack_require__(17),
+	    utils = __webpack_require__(13),
 	    each = utils.each,
-	    Action = __webpack_require__(17),
+	    Action = __webpack_require__(18),
 	    defaultAction = new Action(),
-	    Watch = __webpack_require__(19),
+	    Watch = __webpack_require__(20),
 	    watcher = new Watch(),
 	    createMapper = function createMapper(role, mappedValues) {
 	    return function (name, val) {
@@ -1862,7 +1923,7 @@
 	module.exports = update;
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -1873,7 +1934,7 @@
 	*/
 	"use strict";
 
-	var utils = __webpack_require__(12),
+	var utils = __webpack_require__(13),
 	    calc = {
 
 	    /*
@@ -2227,7 +2288,7 @@
 	module.exports = calc;
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2236,10 +2297,10 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var calc = __webpack_require__(16),
-	    utils = __webpack_require__(12),
+	var calc = __webpack_require__(17),
+	    utils = __webpack_require__(13),
 	    each = utils.each,
-	    Controls = __webpack_require__(18);
+	    Controls = __webpack_require__(19);
 
 	var DEFAULT_PROP = 'current';
 	var PRIVATE = ['onStart', 'onFrame', 'onUpdate', 'onComplete'];
@@ -2385,7 +2446,7 @@
 	module.exports = Action;
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2461,7 +2522,7 @@
 	module.exports = Controls;
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2474,8 +2535,8 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
-	var Action = __webpack_require__(17),
-	    calc = __webpack_require__(16),
+	var Action = __webpack_require__(18),
+	    calc = __webpack_require__(17),
 	    STRING = 'string',
 
 	/*
@@ -2570,14 +2631,14 @@
 	module.exports = Watch;
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var valueTypesManager = __webpack_require__(4),
-	    calc = __webpack_require__(16),
-	    utils = __webpack_require__(12),
+	var valueTypesManager = __webpack_require__(5),
+	    calc = __webpack_require__(17),
+	    utils = __webpack_require__(13),
 	    isNum = utils.isNum,
 	    each = utils.each;
 
@@ -2885,12 +2946,12 @@
 	};
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Role = __webpack_require__(22);
+	var Role = __webpack_require__(23);
 
 	module.exports = new Role({
 	    init: function init() {
@@ -2925,12 +2986,12 @@
 	});
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(12);
+	var utils = __webpack_require__(13);
 	var each = utils.each;
 
 	/*
@@ -2996,14 +3057,14 @@
 	module.exports = Role;
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var Role = __webpack_require__(22);
-	var build = __webpack_require__(24);
-	var each = __webpack_require__(12).each;
+	var Role = __webpack_require__(23);
+	var build = __webpack_require__(25);
+	var each = __webpack_require__(13).each;
 
 	var prefixes = ['Webkit', 'Moz', 'O', 'ms', ''];
 	var numPrefixes = prefixes.length;
@@ -3033,8 +3094,8 @@
 	};
 
 	var cssRole = new Role({
-	    _map: __webpack_require__(27),
-	    _typeMap: __webpack_require__(28),
+	    _map: __webpack_require__(28),
+	    _typeMap: __webpack_require__(29),
 
 	    init: function init() {
 	        this._cssCache = {};
@@ -3069,13 +3130,13 @@
 	module.exports = cssRole;
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var each = __webpack_require__(12).each,
-	    transformDictionary = __webpack_require__(25),
+	var each = __webpack_require__(13).each,
+	    transformDictionary = __webpack_require__(26),
 	    transformProps = transformDictionary.props,
 	    TRANSLATE_Z = 'translateZ';
 
@@ -3114,12 +3175,12 @@
 	};
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var positionTerms = __webpack_require__(26).positions,
+	var positionTerms = __webpack_require__(27).positions,
 	    numPositionTerms = positionTerms.length,
 	    TRANSFORM_PERSPECTIVE = 'transformPerspective',
 	    SCALE = 'scale',
@@ -3155,7 +3216,7 @@
 	module.exports = terms;
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -3174,7 +3235,7 @@
 	module.exports = terms;
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3188,7 +3249,7 @@
 	};
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3242,21 +3303,21 @@
 	};
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var Role = __webpack_require__(22),
-	    attrRole = __webpack_require__(30),
-	    build = __webpack_require__(31),
-	    each = __webpack_require__(12).each;
+	var Role = __webpack_require__(23),
+	    attrRole = __webpack_require__(31),
+	    build = __webpack_require__(32),
+	    each = __webpack_require__(13).each;
 
 	module.exports = new Role({
 	    name: 'svg',
 
-	    _map: __webpack_require__(27),
-	    _typeMap: __webpack_require__(32),
+	    _map: __webpack_require__(28),
+	    _typeMap: __webpack_require__(33),
 
 	    start: function start() {
 	        var boundingBox = this.element.getBBox(),
@@ -3283,13 +3344,13 @@
 	});
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var Role = __webpack_require__(22);
-	var each = __webpack_require__(12).each;
+	var Role = __webpack_require__(23);
+	var each = __webpack_require__(13).each;
 
 	var attrRole = new Role({
 	    update: function update(state) {
@@ -3312,13 +3373,13 @@
 	module.exports = attrRole;
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var each = __webpack_require__(12).each,
-	    transformDictionary = __webpack_require__(25),
+	var each = __webpack_require__(13).each,
+	    transformDictionary = __webpack_require__(26),
 	    transformProps = transformDictionary.props,
 	    zeroNotZero = 0.0001;
 
@@ -3362,7 +3423,7 @@
 	};
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3381,14 +3442,14 @@
 	};
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var Role = __webpack_require__(22);
-	var attrRole = __webpack_require__(30);
-	var each = __webpack_require__(12).each;
+	var Role = __webpack_require__(23);
+	var attrRole = __webpack_require__(31);
+	var each = __webpack_require__(13).each;
 
 	/*
 	    Convert percentage to pixels
@@ -3443,7 +3504,7 @@
 	    Draw Path role
 	*/
 	var SVGDrawPath = new Role({
-	    _map: __webpack_require__(34),
+	    _map: __webpack_require__(35),
 
 	    _typeMap: {
 	        stroke: 'color',
@@ -3466,7 +3527,7 @@
 	module.exports = SVGDrawPath;
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -3480,7 +3541,7 @@
 	};
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -3488,9 +3549,9 @@
 	*/
 	"use strict";
 
-	var calc = __webpack_require__(16),
-	    utils = __webpack_require__(12),
-	    History = __webpack_require__(36),
+	var calc = __webpack_require__(17),
+	    utils = __webpack_require__(13),
+	    History = __webpack_require__(37),
 
 	/*
 	    Input constructor
@@ -3609,7 +3670,7 @@
 	module.exports = Input;
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -3682,7 +3743,7 @@
 	module.exports = History;
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3691,9 +3752,9 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var Actor = __webpack_require__(7),
-	    Tween = __webpack_require__(38),
-	    utils = __webpack_require__(12);
+	var Actor = __webpack_require__(8),
+	    Tween = __webpack_require__(39),
+	    utils = __webpack_require__(13);
 
 	var DEFAULT_STAGGER_EASE = 'linear';
 
@@ -3815,7 +3876,7 @@
 	module.exports = Iterator;
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3828,13 +3889,13 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
-	var Action = __webpack_require__(17),
-	    calc = __webpack_require__(16),
-	    utils = __webpack_require__(12),
+	var Action = __webpack_require__(18),
+	    calc = __webpack_require__(17),
+	    utils = __webpack_require__(13),
 	    each = utils.each,
-	    presetEasing = __webpack_require__(39),
-	    valueOps = __webpack_require__(20),
-	    TweenControls = __webpack_require__(42),
+	    presetEasing = __webpack_require__(40),
+	    valueOps = __webpack_require__(21),
+	    TweenControls = __webpack_require__(43),
 	    nextSteps = {
 	    loop: 'restart',
 	    yoyo: 'reverse',
@@ -4040,7 +4101,7 @@
 	module.exports = Tween;
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -4067,7 +4128,7 @@
 	*/
 	"use strict";
 
-	var Easing = __webpack_require__(40),
+	var Easing = __webpack_require__(41),
 	    easingFunction,
 
 	// Generate easing function with provided power
@@ -4125,12 +4186,12 @@
 	module.exports = baseEasing;
 
 /***/ },
-/* 40 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Bezier = __webpack_require__(41),
+	var Bezier = __webpack_require__(42),
 
 	/*
 	    Mirror easing
@@ -4199,7 +4260,7 @@
 	module.exports = Easing;
 
 /***/ },
-/* 41 */
+/* 42 */
 /***/ function(module, exports) {
 
 	/*
@@ -4359,7 +4420,7 @@
 	module.exports = Bezier;
 
 /***/ },
-/* 42 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4372,7 +4433,7 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
-	var Controls = __webpack_require__(18);
+	var Controls = __webpack_require__(19);
 
 	var TweenControls = (function (_Controls) {
 	    _inherits(TweenControls, _Controls);
@@ -4420,7 +4481,7 @@
 	module.exports = TweenControls;
 
 /***/ },
-/* 43 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4433,10 +4494,10 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
-	var Action = __webpack_require__(17),
-	    calc = __webpack_require__(16),
-	    utils = __webpack_require__(12),
-	    simulations = __webpack_require__(44);
+	var Action = __webpack_require__(18),
+	    calc = __webpack_require__(17),
+	    utils = __webpack_require__(13),
+	    simulations = __webpack_require__(45);
 
 	var DEFAULT_PROP = 'velocity';
 
@@ -4577,13 +4638,13 @@
 	module.exports = Simulate;
 
 /***/ },
-/* 44 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var calc = __webpack_require__(16),
-	    utils = __webpack_require__(12),
+	var calc = __webpack_require__(17),
+	    utils = __webpack_require__(13),
 	    speedPerFrame = calc.speedPerFrame;
 
 	/*
@@ -4660,7 +4721,7 @@
 	module.exports = simulations;
 
 /***/ },
-/* 45 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4673,9 +4734,9 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
-	var Action = __webpack_require__(17),
-	    Pointer = __webpack_require__(46),
-	    calc = __webpack_require__(16);
+	var Action = __webpack_require__(18),
+	    Pointer = __webpack_require__(47),
+	    calc = __webpack_require__(17);
 
 	var Track = (function (_Action) {
 	    _inherits(Track, _Action);
@@ -4741,12 +4802,12 @@
 	module.exports = Track;
 
 /***/ },
-/* 46 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var Input = __webpack_require__(35),
+	var Input = __webpack_require__(36),
 	    currentPointer,
 	    // Sort this out for multitouch
 
@@ -4835,7 +4896,7 @@
 	module.exports = Pointer;
 
 /***/ },
-/* 47 */
+/* 48 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -4848,7 +4909,7 @@
 	};
 
 /***/ },
-/* 48 */
+/* 49 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4860,7 +4921,7 @@
 	};
 
 /***/ },
-/* 49 */
+/* 50 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4872,16 +4933,16 @@
 	};
 
 /***/ },
-/* 50 */
+/* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var createDelimited = __webpack_require__(51),
-	    getColorValues = __webpack_require__(52),
-	    functionCreate = __webpack_require__(55),
-	    defaultProps = __webpack_require__(56),
-	    terms = __webpack_require__(26).hsl;
+	var createDelimited = __webpack_require__(52),
+	    getColorValues = __webpack_require__(53),
+	    functionCreate = __webpack_require__(56),
+	    defaultProps = __webpack_require__(57),
+	    terms = __webpack_require__(27).hsl;
 
 	module.exports = {
 
@@ -4909,7 +4970,7 @@
 	};
 
 /***/ },
-/* 51 */
+/* 52 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -4936,13 +4997,13 @@
 	};
 
 /***/ },
-/* 52 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var splitCommaDelimited = __webpack_require__(53),
-	    functionBreak = __webpack_require__(54);
+	var splitCommaDelimited = __webpack_require__(54),
+	    functionBreak = __webpack_require__(55);
 
 	module.exports = function (value, terms) {
 	    var splitValue = {},
@@ -4958,7 +5019,7 @@
 	};
 
 /***/ },
-/* 53 */
+/* 54 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4968,7 +5029,7 @@
 	};
 
 /***/ },
-/* 54 */
+/* 55 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4978,7 +5039,7 @@
 	};
 
 /***/ },
-/* 55 */
+/* 56 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4988,7 +5049,7 @@
 	};
 
 /***/ },
-/* 56 */
+/* 57 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -5011,17 +5072,17 @@
 	};
 
 /***/ },
-/* 57 */
+/* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var createDelimited = __webpack_require__(51),
-	    getColorValues = __webpack_require__(52),
-	    functionCreate = __webpack_require__(55),
-	    defaultProps = __webpack_require__(56),
+	var createDelimited = __webpack_require__(52),
+	    getColorValues = __webpack_require__(53),
+	    functionCreate = __webpack_require__(56),
+	    defaultProps = __webpack_require__(57),
 	    colorDefaults = defaultProps.color,
-	    terms = __webpack_require__(26).colors;
+	    terms = __webpack_require__(27).colors;
 
 	module.exports = {
 
@@ -5046,12 +5107,12 @@
 	};
 
 /***/ },
-/* 58 */
+/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var rgb = __webpack_require__(57);
+	var rgb = __webpack_require__(58);
 
 	module.exports = {
 
@@ -5094,15 +5155,15 @@
 	};
 
 /***/ },
-/* 59 */
+/* 60 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var utils = __webpack_require__(12),
-	    rgb = __webpack_require__(57),
-	    hsl = __webpack_require__(50),
-	    hex = __webpack_require__(58),
+	var utils = __webpack_require__(13),
+	    rgb = __webpack_require__(58),
+	    hsl = __webpack_require__(51),
+	    hex = __webpack_require__(59),
 	    supported = [rgb, hsl, hex],
 	    numSupported = 3,
 	    runSupported = function runSupported(method, value) {
@@ -5131,15 +5192,15 @@
 	};
 
 /***/ },
-/* 60 */
+/* 61 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var createDelimited = __webpack_require__(51),
-	    pxDefaults = __webpack_require__(49).defaultProps,
-	    splitSpaceDelimited = __webpack_require__(61),
-	    terms = __webpack_require__(26).positions;
+	var createDelimited = __webpack_require__(52),
+	    pxDefaults = __webpack_require__(50).defaultProps,
+	    splitSpaceDelimited = __webpack_require__(62),
+	    terms = __webpack_require__(27).positions;
 
 	module.exports = {
 
@@ -5174,7 +5235,7 @@
 	};
 
 /***/ },
-/* 61 */
+/* 62 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -5184,15 +5245,15 @@
 	};
 
 /***/ },
-/* 62 */
+/* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var terms = __webpack_require__(26).dimensions,
-	    pxDefaults = __webpack_require__(49).defaultProps,
-	    createDelimited = __webpack_require__(51),
-	    splitSpaceDelimited = __webpack_require__(61);
+	var terms = __webpack_require__(27).dimensions,
+	    pxDefaults = __webpack_require__(50).defaultProps,
+	    createDelimited = __webpack_require__(52),
+	    splitSpaceDelimited = __webpack_require__(62);
 
 	module.exports = {
 
@@ -5234,7 +5295,7 @@
 	};
 
 /***/ },
-/* 63 */
+/* 64 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -5246,17 +5307,17 @@
 	};
 
 /***/ },
-/* 64 */
+/* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
-	var color = __webpack_require__(59),
-	    utils = __webpack_require__(12),
-	    pxDefaults = __webpack_require__(49).defaultProps,
-	    terms = __webpack_require__(26).shadow,
-	    splitSpaceDelimited = __webpack_require__(61),
-	    createDelimited = __webpack_require__(51),
+	var color = __webpack_require__(60),
+	    utils = __webpack_require__(13),
+	    pxDefaults = __webpack_require__(50).defaultProps,
+	    terms = __webpack_require__(27).shadow,
+	    splitSpaceDelimited = __webpack_require__(62),
+	    createDelimited = __webpack_require__(52),
 	    shadowTerms = terms.slice(0, 4);
 
 	module.exports = {
@@ -5304,12 +5365,12 @@
 	};
 
 /***/ },
-/* 65 */
+/* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var utils = __webpack_require__(12),
+	var utils = __webpack_require__(13),
 	    each = utils.each,
 	    floatRegex = /(-)?(\d[\d\.]*)/g,
 	    generateToken = function generateToken(key) {
@@ -5353,7 +5414,7 @@
 	};
 
 /***/ },
-/* 66 */
+/* 67 */
 /***/ function(module, exports) {
 
 	// Generated by CoffeeScript 1.9.3
@@ -5603,34 +5664,6 @@
 
 
 /***/ },
-/* 67 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	var Trophies = function Trophies() {
-	  _classCallCheck(this, Trophies);
-
-	  $(".card").flip({
-	    axis: 'y',
-	    trigger: 'hover'
-	  });
-	};
-
-	exports['default'] = {
-	  init: function init() {
-	    new Trophies();
-	  }
-	};
-	module.exports = exports['default'];
-
-/***/ },
 /* 68 */
 /***/ function(module, exports) {
 
@@ -5644,46 +5677,44 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var Nav = (function () {
-	  function Nav() {
-	    _classCallCheck(this, Nav);
-
-	    this.initTrophiesNav();
-	    this.initGameNav();
+	var Trophies = (function () {
+	  function Trophies() {
+	    _classCallCheck(this, Trophies);
 	  }
 
-	  _createClass(Nav, [{
-	    key: 'initTrophiesNav',
-	    value: function initTrophiesNav() {
-	      $('.trophies-nav').click(function () {
-	        $('#game-wrapper').removeClass('game-body').addClass('trophies-body');
-	        $('.game-nav').fadeIn("slow");
-	        $(this).fadeOut("slow");
-	        $('.trophies-container').fadeIn("slow");
-	        $('.game-container').fadeOut("slow");
+	  _createClass(Trophies, null, [{
+	    key: 'init',
+	    value: function init() {
+	      $(".card").flip({
+	        axis: 'y',
+	        trigger: 'hover'
 	      });
 	    }
 	  }, {
-	    key: 'initGameNav',
-	    value: function initGameNav() {
-	      $('.game-nav').click(function () {
-	        $('#game-wrapper').removeClass('trophies-body').addClass('game-body');
-	        $('.trophies-nav').fadeIn("slow");
-	        $(this).fadeOut("slow");
-	        $('.game-container').fadeIn("slow");
-	        $('.trophies-container').fadeOut("slow");
-	      });
+	    key: 'count',
+	    value: function count() {
+	      return $('.trophies-container .card').length;
+	    }
+	  }, {
+	    key: 'currentGoal',
+	    value: function currentGoal() {
+	      var $goalPoints = $('.goal span');
+	      return parseInt($goalPoints.html());
+	    }
+	  }, {
+	    key: 'getNextTrophy$',
+	    value: function getNextTrophy$() {
+	      var $goalPoints = $('.goal span');
+	      var newGoal = parseInt($goalPoints.html());
+	      // Skips first 2 non .card child
+	      return $('.trophies-container .card:nth-child(' + (newGoal + 1) + ')');
 	    }
 	  }]);
 
-	  return Nav;
+	  return Trophies;
 	})();
 
-	exports['default'] = {
-	  init: function init() {
-	    new Nav();
-	  }
-	};
+	exports['default'] = Trophies;
 	module.exports = exports['default'];
 
 /***/ }

@@ -1,19 +1,21 @@
-<p id="notice"><%= notice %></p>
+<div class="admin">
+  <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Src:</strong>
-  <%= @trophy.src %>
-</p>
+  <p>
+    <strong>Src:</strong>
+    <%= @trophy.src %>
+  </p>
+  
+  <p>
+    <strong>Alt:</strong>
+    <%= @trophy.alt %>
+  </p>
 
-<p>
-  <strong>Alt:</strong>
-  <%= @trophy.alt %>
-</p>
+  <p>
+    <strong>Description:</strong>
+    <%= @trophy.description %>
+  </p>
 
-<p>
-  <strong>Description:</strong>
-  <%= @trophy.description %>
-</p>
-
-<%= link_to 'Edit', edit_trophy_path(@trophy) %> |
-<%= link_to 'Back', trophies_path %>
+  <%= link_to 'Edit', edit_trophy_path(@trophy) %> |
+  <%= link_to 'Back', trophies_path %>
+</div>
